@@ -1,6 +1,6 @@
 # edicasoft-test
 
-> My cat&#39;s pajamas Nuxt.js project
+> [link to Demo in Surge!](edicasofttest.surge.sh)
 
 ## Build Setup
 
