@@ -1,6 +1,6 @@
 # edicasoft-test
 
-> [link to Demo in Surge!](edicasofttest.surge.sh)
+> [link to Demo in Surge!](http://edicasofttest.surge.sh/)
 
 ## Build Setup
 
