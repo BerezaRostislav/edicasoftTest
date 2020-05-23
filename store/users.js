@@ -22,7 +22,6 @@ export const mutations = {
   },
   editUserStreet (state, { id, data }) {
     state.users[id].address.street = data
-    console.log(state.users[id].address.street)
   }
 }
 

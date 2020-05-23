@@ -1,76 +1,76 @@
 <template>
-  <v-layout>
-    <v-flex xs6 sm3>
-      <div>
-        <h1>User list</h1>
-        <p v-if="$fetchState.pending">
-          Fetching Users...
-        </p>
-        <p v-else-if="$fetchState.error">
-          Error while fetching posts: {{ $fetchState.error.message }}
-        </p>
-        <v-text-field
-          v-model="query"
-          label="Search User"
-        />
-        <v-list>
-          <v-list-item
-            v-for="(user, index) in computedUsers"
-            :key="index"
-            @click="pickActiveUser(user.id)"
-          >
-            <v-list-item-content>
-              <v-list-item-title v-text="user.name" />
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-        <v-btn @click="openAddDialog">
-          Add User
-        </v-btn>
-      </div>
+  <v-layout justify-center align-content-start="">
+    <v-flex xs6 sm3 mt-10>
+      <h1>User list</h1>
+      <p v-if="$fetchState.pending">
+        Fetching Users...
+      </p>
+      <p v-else-if="$fetchState.error">
+        Error while fetching posts: {{ $fetchState.error.message }}
+      </p>
+      <v-text-field
+        v-model="query"
+        label="Search User"
+      />
+      <transition-group name="slide-fade" tag="v-list">
+        <v-list-item
+          v-for="user in computedUsers"
+          :key="user.id"
+          @click="pickActiveUser(user.id)"
+        >
+          <v-list-item-content transition="slide-x-transition">
+            <v-list-item-title v-text="user.name" />
+          </v-list-item-content>
+        </v-list-item>
+      </transition-group>
+      <v-btn @click="openAddDialog">
+        Add User
+      </v-btn>
     </v-flex>
     <v-flex xs6 offset-sm2 sm4>
-      <v-card
-        v-if="pickedUser"
-        class="mx-auto my-12"
-        max-width="400"
-      >
-        <v-card-title>{{ pickedUser.name }}</v-card-title>
-        <v-card-text>
-          <v-row
-            align="center"
-            class="mx-0"
-          >
-            <div class="grey--text ml-4">
-              {{ pickedUser.username }}
+      <transition name="fade">
+        <v-card
+          v-if="pickedUser"
+          class="mx-auto my-12"
+          max-width="400"
+        >
+          <v-card-title>{{ pickedUser.name }}</v-card-title>
+          <v-card-text>
+            <v-row
+              align="center"
+              class="mx-0"
+            >
+              <div class="grey--text ml-4">
+                {{ pickedUser.username }}
+              </div>
+            </v-row>
+            <div class="my-4 subtitle-1">
+              {{ pickedUser.email }}
             </div>
-          </v-row>
-          <div class="my-4 subtitle-1">
-            {{ pickedUser.email }}
-          </div>
-          <div>
-            {{ pickedUser.address.street }} {{ pickedUser.address.suite }}, {{ pickedUser.address.city }}
-          </div>
-        </v-card-text>
-        <v-divider class="mx-4" />
-        <v-card-title>{{ pickedUser.phone }}</v-card-title>
-        <v-card-actions>
-          <v-btn
-            @click="deleteSnackBar = true"
-            color="deep-purple lighten-2"
-            text
-          >
-            Delete
-          </v-btn>
-          <v-btn
-            @click="openEditDialog()"
-            color="deep-purple lighten-2"
-            text
-          >
-            Edit
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+            <div>
+              {{ pickedUser.address.street }} {{ pickedUser.address.suite }}, {{ pickedUser.address.city }}
+            </div>
+          </v-card-text>
+          <v-divider class="mx-4" />
+          <v-card-title>{{ pickedUser.phone }}</v-card-title>
+          <v-card-actions>
+            <v-btn
+              @click="deleteSnackBar = true"
+              color="deep-purple lighten-2"
+              text
+            >
+              Delete
+            </v-btn>
+            <v-btn
+              @click="openEditDialog()"
+              color="deep-purple lighten-2"
+              text
+            >
+              Edit
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </transition>
     </v-flex>
     <v-snackbar
       v-model="deleteSnackBar"
@@ -185,6 +185,7 @@ export default {
   methods: {
     pickActiveUser (id) {
       const result = this.users.find(user => user.id === id)
+      this.$store.commit('users/setActiveUser', null)
       this.$store.commit('users/setActiveUser', result)
     },
     deleteUser (id) {
@@ -251,3 +252,23 @@ export default {
   }
 }
 </script>
+
+<style lang="sass" scoped>
+
+.fade-enter-active, .fade-leave-active
+  transition: opacity .5s
+
+.fade-enter, .fade-leave-to
+  opacity: 0
+
+.slide-fade-enter-active
+  transition: all .6s ease
+
+.slide-fade-leave-active
+  transition: all .6s cubic-bezier(1.0, 0.5, 0.8, 1.0)
+
+.slide-fade-enter, .slide-fade-leave-to
+  transform: translateX(10px)
+  opacity: 0
+
+</style>
